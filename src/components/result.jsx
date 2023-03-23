@@ -1,11 +1,13 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 function Result(props) {
   return (
     <div>
-        <h4>Total questions: 10</h4>
-        <h4>Correct answers: 7</h4>
-        <h4>Percentage: 70%</h4>
+        {props.result.candidateName ?<h4>Candidate name: {props.result.candidateName}</h4>:""}
+        
+        <h4>Total questions: {props.result.totalQuestions}</h4>
+        <h4>Correct answers: {props.result.correctAnswers}</h4>
+        <h4>Percentage: {props.result.percentage}%</h4>
     </div>
   )
 }

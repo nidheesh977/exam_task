@@ -1,16 +1,26 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect } from 'react'
+import { Link, useHistory } from 'react-router-dom'
 
 function Home() {
+  const history = useHistory()
+  useEffect(()=>{
+    if(!localStorage.getItem("access_token")){
+      history.push("/login")
+    }
+  })
   return (
     <div>
         <h3>Exam portal</h3>
         <div>
-            <button>Start Exam</button>
+          <Link to = "/exam-list">
+            <button>Attend New Exam</button>
+          </Link>
+          <Link to = "/exam">
             <button>Continue Exam</button>
-            <Link to = "/results">
-                <button>Results</button>
-            </Link>
+          </Link>
+          <Link to = "/results">
+            <button>Results</button>
+          </Link>
         </div>
     </div>
   )
