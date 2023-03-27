@@ -7,19 +7,24 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import ExamList from './pages/ExamList'
 import Exam from './pages/Exam'
 import Admin from './pages/admin/Admin'
-
+import Report from './pages/admin/Report'
+import CreateQuestion from './pages/admin/CreateQuestion'
+import AdminRoute from './AdminRoute'
+import UserRoute from './UserRoute'
 
 function App() {
   return (
     <Router>
       <Switch>
-        <Route path = "/" exact component={Home} />
-        <Route path = "/exam-list" component={ExamList} />
-        <Route path = "/exam" component={Exam} />
+        <UserRoute path = "/" exact component={Home} />
+        <UserRoute path = "/exam-list" component={ExamList} />
+        <UserRoute path = "/exam" component={Exam} />
         <Route path = "/login" component={Login} />
         <Route path = "/register" component={Register} />
-        <Route path = "/results" component={Results} />
-        <Route path = "/admin" component={Admin} />
+        <UserRoute path = "/results" component={Results} />
+        <AdminRoute path = "/admin" exact component={Admin} />
+        <AdminRoute path = "/admin/create-question" component={CreateQuestion} />
+        <AdminRoute path = "/admin/report/:id" component={Report} />
       </Switch>
     </Router>
   )

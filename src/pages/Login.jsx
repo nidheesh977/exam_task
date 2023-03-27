@@ -15,10 +15,21 @@ function Login() {
   const [error, setError] = useState(false)
 
   useEffect(()=>{
+    let config = {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("access_token"),
+      },
+    };
     if(localStorage.getItem("access_token")){
-      history.push("/")
+      axios.get(`${domain}/check-admin/`, config)
+      .then(res => {
+        history.push("/admin/")
+      })
+      .catch(err => {
+        history.push("/")
+      })
     }
-  })
+  }, [])
 
   const changeHandler = (e) => {
     let tempData = data
@@ -32,8 +43,18 @@ function Login() {
     .then(res => {
       console.log(res.data)
       localStorage.setItem("access_token", res.data.access)
-      localStorage.setItem("refresh_token", res.data.refresh)
-      history.push("/")
+      let config = {
+        headers: {
+          Authorization: "Bearer " + res.data.access,
+        },
+      };
+      axios.get(`${domain}/check-admin/`, config)
+      .then(response => {
+        history.push("/admin/")
+      })
+      .catch(error => {
+        history.push("/")
+      })
     })
     .catch(err => {
       console.log(err.response)

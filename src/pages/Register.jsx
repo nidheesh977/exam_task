@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 import axios from 'axios'
+import { useHistory } from 'react-router-dom'
 const domain = process.env.REACT_APP_BEDOMAIN
 
 function Register() {
+  const history = useHistory()
   const [data, setData] = useState({
     email: "",
     name: "",
@@ -15,8 +17,10 @@ function Register() {
     axios.post(`${domain}/accounts/register/`, data)
     .then(res => {
       console.log(res)
+      history.push("/login")
     })
     .catch(err => {
+      alert("Invalid credentials")
       console.log(err.response)
     })
   }

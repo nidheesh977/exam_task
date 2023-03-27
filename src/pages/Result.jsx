@@ -1,32 +1,31 @@
-import React from 'react'
+import axios from 'axios'
+import React, { useEffect, useState } from 'react'
 import Result from '../components/result'
 
+const domain = process.env.REACT_APP_BEDOMAIN
+
 function Results() {
-  const results = [
-    {
-      candidateName: "Nidheesh",
-      totalQuestions: 10,
-      correctAnswers: 7,
-      percentage: 70
+  let config = {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("access_token"),
     },
-    {
-      candidateName: "Nidhin",
-      totalQuestions: 10,
-      correctAnswers: 8,
-      percentage: 80
-    },
-    {
-      candidateName: "Nivin",
-      totalQuestions: 10,
-      correctAnswers: 9,
-      percentage: 90
-    },
-  ]
+  };
+  const [results, setResults] = useState([])
+  useEffect(()=>{
+    axios.get(`${domain}/get-result-user/`, config)
+    .then(res => {
+      setResults([...res.data])
+    })
+    .then(err => {
+      console.log(err.response)
+    })
+  }, [])
   return (
     <div>
+        <h1>Results</h1>
         {results.map((item, index) =>{
             return(
-                <Result result = {item}/>
+                <Result result = {item} isAdmin = {false}/>
             )
         })}
     </div>

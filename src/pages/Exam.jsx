@@ -1,39 +1,60 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import axios from 'axios';
+import { useHistory } from 'react-router-dom';
+const domain = process.env.REACT_APP_BEDOMAIN
 
 function Exam() {
-  const [questions, setQuestions] = useState([
-    {
-        id: 1,
-        question: "Question1",
-        optionA: "OptionA",
-        optionB: "OptionB",
-        optionC: "OptionC",
-        optionD: "OptionD",
-        answer: ""
-    },
-    {
-        id: 2,
-        question: "Question2",
-        optionA: "OptionA",
-        optionB: "OptionB",
-        optionC: "OptionC",
-        optionD: "OptionD",
-        answer: ""
-    },
-    {
-        id: 3,
-        question: "Question3",
-        optionA: "OptionA",
-        optionB: "OptionB",
-        optionC: "OptionC",
-        optionD: "OptionD",
-        answer: ""
-    },
-  ])
+  const history = useHistory()
+  const [questions, setQuestions] = useState([])
+  useEffect(()=>{
+    let config = {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("access_token"),
+      },
+    };
+    axios.get(`${domain}/get-pending-submit-exam/`, config).then(res=>{
+      let questionsRes = res.data
+      let temp_questions = []
+      for (var i = 0; i < questionsRes.length; i++){
+        temp_questions.push({
+          id: questionsRes[i].id,
+          question: questionsRes[i].question,
+          optionA: questionsRes[i].optionA,
+          optionB: questionsRes[i].optionB,
+          optionC: questionsRes[i].optionC,
+          optionD: questionsRes[i].optionD,
+          answer: ""
+        })
+      }
+      setQuestions([...temp_questions]);
+    })
+    .catch(err => {
+      history.push("/exam-list")
+    })
+  }, [])
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const submitAnswers = () => {
-    alert("Submit answer")
-    setCurrentQuestion(0)
+    let config = {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("access_token"),
+      },
+    };
+    let answers = []
+    for (var i = 0; i < questions.length; i++){
+      answers.push({
+        id: questions[i].id,
+        answer: questions[i].answer
+      })
+    }
+    axios.post(`${domain}/submit-answer/`, answers, config)
+    .then(res => {
+      alert(`Percentage: ${res.data.percentage}%`)
+      history.push("/")
+    })
+    .catch(err => {
+      alert("error")
+      console.log(err.response)
+    })
   }
   const updateAnswer = (answer) => {
     let tempQuestions = questions
